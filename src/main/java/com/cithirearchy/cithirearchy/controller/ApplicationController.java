@@ -2,6 +2,7 @@ package com.cithirearchy.cithirearchy.controller;
 
 import com.cithirearchy.cithirearchy.entity.Application;
 import com.cithirearchy.cithirearchy.service.ApplicationService;
+import com.cithirearchy.cithirearchy.dto.StatusUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/stats/status/{status}")
-    public Long countApplicationsByStatus(@PathVariable String status) {
+    public List<Application> countApplicationsByStatus(@PathVariable String status) {
         return applicationService.countApplicationsByStatus(status);
     }
 }

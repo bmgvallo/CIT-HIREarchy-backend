@@ -20,7 +20,7 @@ public class ApplicationService {
     }
 
     public List<Application> getApplicationsByStudent(Long studentId) {
-        return applicationRepository.findByStudentStudID(studentId);
+        return applicationRepository.findByStudentId(studentId);
     }
 
     public List<Application> getApplicationsByListing(Long listingId) {
@@ -37,7 +37,7 @@ public class ApplicationService {
         return null;
     }
 
-    public Long countApplicationsByStatus(String status) {
-        return applicationRepository.countByStatus(status);
+    public List<Application> countApplicationsByStatus(String status) {
+        return applicationRepository.findByStatus(status);
     }
 }

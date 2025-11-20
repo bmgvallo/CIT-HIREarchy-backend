@@ -36,11 +36,22 @@ public class CompanyService {
     }
 
     public Optional<Company> loginCompany(String email, String password) {
-        Optional<Company> company = companyRepository.findByContactEmail(email);
-        if (company.isPresent() && company.get().getContactEmail().equals(email)) {
-            // In real application, use password encoder
+        Optional<Company> company = companyRepository.findByEmail(email);
+        if (company.isPresent()) {
             return company;
         }
         return Optional.empty();
+    }
+    
+    public List<Company> getPendingCompanies() {
+        return companyRepository.findByCompanyStatus("Pending");
+    }
+    
+    public List<Company> getApprovedCompanies() {
+        return companyRepository.findByCompanyStatus("Approved");
+    }
+    
+    public List<Company> getCompaniesByCoordinator(Long coordinatorId) {
+        return companyRepository.findByCoordinatorId(coordinatorId);
     }
 }

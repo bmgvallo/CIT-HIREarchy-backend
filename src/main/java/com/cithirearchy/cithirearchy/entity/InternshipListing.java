@@ -19,6 +19,8 @@ public class InternshipListing {
     private String duration;
     private LocalDate deadline;
     private Double salary;
+    private String status = "pending"; // pending, approved, rejected
+    private String rejectionReason;
 
     @ManyToOne
     @JoinColumn(name = "companyID")
@@ -30,6 +32,12 @@ public class InternshipListing {
 
     @OneToMany(mappedBy = "internshipListing", cascade = CascadeType.ALL)
     private List<Application> applications;
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    
+    public String getRejectionReason() { return rejectionReason; }
+    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
 
     public Long getListingID() { return listingID; }
     public void setListingID(Long listingID) { this.listingID = listingID; }
