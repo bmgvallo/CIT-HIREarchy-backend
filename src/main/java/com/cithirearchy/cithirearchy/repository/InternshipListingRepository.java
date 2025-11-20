@@ -7,9 +7,15 @@ import java.util.List;
 
 @Repository
 public interface InternshipListingRepository extends JpaRepository<InternshipListing, Long> {
-    List<InternshipListing> findByCompanyCompanyID(Long companyId);
+    // Use company.id instead of company.companyID
+    List<InternshipListing> findByCompanyId(Long companyId);
+
     List<InternshipListing> findByCourseCourseID(Long courseId);
+    
     List<InternshipListing> findByLocationContaining(String location);
     List<InternshipListing> findByModality(String modality);
     List<InternshipListing> findByTitleContaining(String title);
+    
+    // Use company.companyStatus instead of company.companyStatus
+    List<InternshipListing> findByCompanyCompanyStatus(String companyStatus);
 }

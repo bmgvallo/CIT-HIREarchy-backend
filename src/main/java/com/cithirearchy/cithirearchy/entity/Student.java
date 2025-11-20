@@ -1,40 +1,42 @@
 package com.cithirearchy.cithirearchy.entity;
-
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-public class Student {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long studID;
-
+@Table(name = "student")
+@PrimaryKeyJoinColumn(name = "user_id")
+public class Student extends User {
+    
     private String studName;
-    private String studEmail;
-    private String studPassword;
     private String studProgram;
     private String studYrLevel;
     private String resumeURL; 
     private Double studGPA;
 
     @ManyToOne
-    @JoinColumn(name = "courseID")
+    @JoinColumn(name = "course_id")
     private Course course;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Application> applications;
 
-    public Long getStudID() { return studID; }
-    public void setStudID(Long studID) { this.studID = studID; }
+    // Constructors
+    public Student() {
+        super();
+        setRoleId("25-103");
+    }
+    
+    public Student(String username, String password, String email, String studName, 
+                   String studProgram, String studYrLevel) {
+        super(username, password, email, "25-103");
+        this.studName = studName;
+        this.studProgram = studProgram;
+        this.studYrLevel = studYrLevel;
+    }
 
+    // Getters and Setters
     public String getStudName() { return studName; }
     public void setStudName(String studName) { this.studName = studName; }
-
-    public String getStudEmail() { return studEmail; }
-    public void setStudEmail(String studEmail) { this.studEmail = studEmail; }
-
-    public String getStudPassword() { return studPassword; }
-    public void setStudPassword(String studPassword) { this.studPassword = studPassword; }
 
     public String getStudProgram() { return studProgram; }
     public void setStudProgram(String studProgram) { this.studProgram = studProgram; }
@@ -53,4 +55,7 @@ public class Student {
 
     public List<Application> getApplications() { return applications; }
     public void setApplications(List<Application> applications) { this.applications = applications; }
+    
+    // Convenience method to get student ID
+    public Long getStudID() { return super.getId(); }
 }

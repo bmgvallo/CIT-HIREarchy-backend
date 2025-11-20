@@ -2,6 +2,7 @@ package com.cithirearchy.cithirearchy.controller;
 
 import com.cithirearchy.cithirearchy.entity.Company;
 import com.cithirearchy.cithirearchy.service.CompanyService;
+import com.cithirearchy.cithirearchy.dto.StatusUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,13 +49,12 @@ public class CompanyController {
     }
 }
 
-class StatusUpdateRequest {
-    private String status;
+class LoginRequest {
+    private String email;
+    private String password;
     
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-    public String getFeedback() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFeedback'");
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }

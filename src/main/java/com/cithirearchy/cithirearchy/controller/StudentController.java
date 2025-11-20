@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -21,8 +23,8 @@ public class StudentController {
     @PostMapping("/register")
     public ResponseEntity<?> registerStudent(@RequestBody Student student) {
         try {
-            // Check if email already exists
-            Optional<Student> existingStudent = studentService.getStudentByEmail(student.getStudEmail());
+            // Check if email already exists using new method
+            Optional<Student> existingStudent = studentService.getStudentByEmail(student.getEmail());
             if (existingStudent.isPresent()) {
                 return ResponseEntity.badRequest().body("Email already exists");
             }
@@ -85,6 +87,24 @@ public class StudentController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/debug/{id}")
+    public ResponseEntity<Map<String, Object>> debugStudent(@PathVariable Long id) {
+        Optional<Student> student = studentService.getStudentById(id);
+        if (student.isPresent()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", student.get().getId());
+            response.put("username", student.get().getUsername());
+            response.put("email", student.get().getEmail());
+            response.put("studName", student.get().getStudName());
+            response.put("studProgram", student.get().getStudProgram());
+            response.put("studYrLevel", student.get().getStudYrLevel());
+            response.put("studGPA", student.get().getStudGPA());
+            response.put("resumeURL", student.get().getResumeURL());
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.notFound().build();
     }
 }
 

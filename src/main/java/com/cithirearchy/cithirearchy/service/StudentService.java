@@ -1,8 +1,10 @@
 package com.cithirearchy.cithirearchy.service;
 
+import com.cithirearchy.cithirearchy.entity.InternshipListing;
 import com.cithirearchy.cithirearchy.entity.Student;
 import com.cithirearchy.cithirearchy.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +14,9 @@ public class StudentService {
     
     @Autowired
     private StudentRepository studentRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public Student registerStudent(Student student) {
         return studentRepository.save(student);
@@ -22,7 +27,7 @@ public class StudentService {
     }
 
     public Optional<Student> getStudentByEmail(String email) {
-        return studentRepository.findByStudEmail(email);
+        return studentRepository.findByEmail(email);
     }
 
     public List<Student> getAllStudents() {
@@ -34,12 +39,21 @@ public class StudentService {
         if (optionalStudent.isPresent()) {
             Student student = optionalStudent.get();
             student.setStudName(studentDetails.getStudName());
-            student.setStudEmail(studentDetails.getStudEmail());
-            student.setStudPassword(studentDetails.getStudPassword());
+            student.setEmail(studentDetails.getEmail());
             student.setStudProgram(studentDetails.getStudProgram());
             student.setStudYrLevel(studentDetails.getStudYrLevel());
             student.setResumeURL(studentDetails.getResumeURL());
             student.setStudGPA(studentDetails.getStudGPA());
+            return studentRepository.save(student);
+        }
+        return null;
+    }
+    
+    public Student updateStudentPassword(Long id, String newPassword) {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if (optionalStudent.isPresent()) {
+            Student student = optionalStudent.get();
+            student.setPassword(passwordEncoder.encode(newPassword));
             return studentRepository.save(student);
         }
         return null;
@@ -49,9 +63,13 @@ public class StudentService {
         return studentRepository.findByStudProgram(program);
     }
 
+    public List<InternshipListing> getStudentsByCourse(Long courseId) {
+        return studentRepository.findByCourseCourseID(courseId);
+    }
+
     public Optional<Student> loginStudent(String email, String password) {
-        Optional<Student> student = studentRepository.findByStudEmail(email);
-        if (student.isPresent() && student.get().getStudPassword().equals(password)) {
+        Optional<Student> student = studentRepository.findByEmail(email);
+        if (student.isPresent() && passwordEncoder.matches(password, student.get().getPassword())) {
             return student;
         }
         return Optional.empty();
