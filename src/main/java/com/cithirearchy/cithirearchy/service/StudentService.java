@@ -1,6 +1,5 @@
 package com.cithirearchy.cithirearchy.service;
 
-import com.cithirearchy.cithirearchy.entity.InternshipListing;
 import com.cithirearchy.cithirearchy.entity.Student;
 import com.cithirearchy.cithirearchy.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +43,7 @@ public class StudentService {
             student.setStudYrLevel(studentDetails.getStudYrLevel());
             student.setResumeURL(studentDetails.getResumeURL());
             student.setStudGPA(studentDetails.getStudGPA());
+            student.setCourse(studentDetails.getCourse()); // CHANGED: Update course as String
             return studentRepository.save(student);
         }
         return null;
@@ -63,8 +63,9 @@ public class StudentService {
         return studentRepository.findByStudProgram(program);
     }
 
-    public List<InternshipListing> getStudentsByCourse(Long courseId) {
-        return studentRepository.findByCourseCourseID(courseId);
+    // CHANGED: Now filters by String course instead of Course entity
+    public List<Student> getStudentsByCourse(String course) {
+        return studentRepository.findByCourse(course);
     }
 
     public Optional<Student> loginStudent(String email, String password) {

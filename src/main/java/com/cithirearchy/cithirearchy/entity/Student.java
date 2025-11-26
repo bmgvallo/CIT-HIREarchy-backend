@@ -12,10 +12,9 @@ public class Student extends User {
     private String studYrLevel;
     private String resumeURL; 
     private Double studGPA;
-
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
+    
+    // CHANGED: Replace Course reference with String course field
+    private String course; // Now stores course as String instead of Course entity
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Application> applications;
@@ -27,13 +26,15 @@ public class Student extends User {
     }
     
     public Student(String username, String password, String email, String studName, 
-                   String studProgram, String studYrLevel) {
+                   String studProgram, String studYrLevel, String course) {
         super(username, password, email, "25-103");
         this.studName = studName;
         this.studProgram = studProgram;
         this.studYrLevel = studYrLevel;
+        this.course = course;
     }
 
+    // Getters and Setters
     public String getStudName() { return studName; }
     public void setStudName(String studName) { this.studName = studName; }
 
@@ -49,8 +50,9 @@ public class Student extends User {
     public Double getStudGPA() { return studGPA; }
     public void setStudGPA(Double studGPA) { this.studGPA = studGPA; }
 
-    public Course getCourse() { return course; }
-    public void setCourse(Course course) { this.course = course; }
+    // CHANGED: Getter/Setter for course (String instead of Course entity)
+    public String getCourse() { return course; }
+    public void setCourse(String course) { this.course = course; }
 
     public List<Application> getApplications() { return applications; }
     public void setApplications(List<Application> applications) { this.applications = applications; }

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Table(name = "internship_listing")
 public class InternshipListing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,17 +23,20 @@ public class InternshipListing {
     private String status = "pending"; //default status
     private String rejectionReason;
 
+    // CHANGED: Replace Course reference with String array for courses
+    @ElementCollection
+    @CollectionTable(name = "listing_courses", joinColumns = @JoinColumn(name = "listing_id"))
+    @Column(name = "course")
+    private List<String> courses; // Stores multiple courses as String array
+
     @ManyToOne
     @JoinColumn(name = "companyID")
     private Company company;
 
-    @ManyToOne
-    @JoinColumn(name = "courseID")
-    private Course course;
-
     @OneToMany(mappedBy = "internshipListing", cascade = CascadeType.ALL)
     private List<Application> applications;
 
+    // Getters and Setters
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
     
@@ -72,8 +76,9 @@ public class InternshipListing {
     public Company getCompany() { return company; }
     public void setCompany(Company company) { this.company = company; }
 
-    public Course getCourse() { return course; }
-    public void setCourse(Course course) { this.course = course; }
+    // CHANGED: Getter/Setter for courses (List<String> instead of Course entity)
+    public List<String> getCourses() { return courses; }
+    public void setCourses(List<String> courses) { this.courses = courses; }
 
     public List<Application> getApplications() { return applications; }
     public void setApplications(List<Application> applications) { this.applications = applications; }
