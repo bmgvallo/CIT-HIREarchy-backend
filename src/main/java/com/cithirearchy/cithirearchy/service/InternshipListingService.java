@@ -28,8 +28,9 @@ public class InternshipListingService {
         return listingRepository.findByCompanyId(companyId);
     }
 
-    public List<InternshipListing> getListingsByCourse(Long courseId) {
-        return listingRepository.findByCourseCourseID(courseId);
+    // CHANGED: Now accepts String course instead of Long courseId
+    public List<InternshipListing> getListingsByCourse(String course) {
+        return listingRepository.findByCourse(course);
     }
 
     public List<InternshipListing> searchListingsByLocation(String location) {
@@ -44,7 +45,6 @@ public class InternshipListingService {
         return listingRepository.findByModality(modality);
     }
     
-    // Add this method for CoordinatorController
     public InternshipListing updateListingStatus(Long listingId, String status, String rejectionReason) {
         InternshipListing listing = listingRepository.findById(listingId).orElse(null);
         if (listing != null) {
@@ -57,7 +57,6 @@ public class InternshipListingService {
         return null;
     }
     
-    // Add delete method
     public boolean deleteListing(Long id) {
         if (listingRepository.existsById(id)) {
             listingRepository.deleteById(id);
@@ -66,13 +65,13 @@ public class InternshipListingService {
         return false;
     }
     
-    // Add method to get listings by status
+    // IMPROVED: Now uses repository method instead of filtering in service
     public List<InternshipListing> getListingsByStatus(String status) {
-        // Since we don't have a direct repository method for status yet,
-        // we'll filter in service (you can add this to repository later)
-        List<InternshipListing> allListings = listingRepository.findAll();
-        return allListings.stream()
-                .filter(listing -> status.equals(listing.getStatus()))
-                .toList();
+        return listingRepository.findByStatus(status);
+    }
+    
+    // NEW: Method to get listings for a specific student based on their course
+    public List<InternshipListing> getListingsForStudent(String studentCourse) {
+        return listingRepository.findByCourse(studentCourse);
     }
 }
