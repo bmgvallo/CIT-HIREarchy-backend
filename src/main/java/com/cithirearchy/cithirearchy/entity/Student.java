@@ -34,7 +34,6 @@ public class Student extends User {
         this.studYrLevel = studYrLevel;
     }
 
-    // Getters and Setters
     public String getStudName() { return studName; }
     public void setStudName(String studName) { this.studName = studName; }
 
@@ -56,6 +55,5 @@ public class Student extends User {
     public List<Application> getApplications() { return applications; }
     public void setApplications(List<Application> applications) { this.applications = applications; }
     
-    // Convenience method to get student ID
     public Long getStudID() { return super.getId(); }
 }

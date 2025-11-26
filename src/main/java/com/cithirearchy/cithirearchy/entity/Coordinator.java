@@ -13,7 +13,6 @@ public class Coordinator extends User {
     @OneToMany(mappedBy = "coordinator", cascade = CascadeType.ALL)
     private List<Company> companies;
 
-    // Constructors
     public Coordinator() {
         super();
         setRoleId("25-101");
@@ -25,7 +24,6 @@ public class Coordinator extends User {
         this.coordinatorDepartment = coordinatorDepartment;
     }
 
-    // Getters and Setters
     public String getCoordinatorName() { return coordinatorName; }
     public void setCoordinatorName(String coordinatorName) { this.coordinatorName = coordinatorName; }
 
@@ -35,6 +33,5 @@ public class Coordinator extends User {
     public List<Company> getCompanies() { return companies; }
     public void setCompanies(List<Company> companies) { this.companies = companies; }
     
-    // Convenience method to get coordinator ID
     public Long getCoordinatorID() { return super.getId(); }
 }

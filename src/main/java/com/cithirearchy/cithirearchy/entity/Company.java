@@ -21,7 +21,7 @@ public class Company extends User {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<InternshipListing> internshipListings;
 
-    // Constructors
+
     public Company() {
         super();
         setRoleId("25-102");
@@ -38,7 +38,7 @@ public class Company extends User {
         this.companyStatus = "Pending";
     }
 
-    // Getters and Setters
+    
     public String getCompanyName() { return companyName; }
     public void setCompanyName(String companyName) { this.companyName = companyName; }
 
@@ -63,6 +63,5 @@ public class Company extends User {
     public List<InternshipListing> getInternshipListings() { return internshipListings; }
     public void setInternshipListings(List<InternshipListing> internshipListings) { this.internshipListings = internshipListings; }
     
-    // Convenience method to get company ID
     public Long getCompanyID() { return super.getId(); }
 }

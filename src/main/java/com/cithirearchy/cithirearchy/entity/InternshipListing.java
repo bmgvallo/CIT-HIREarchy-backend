@@ -19,7 +19,7 @@ public class InternshipListing {
     private String duration;
     private LocalDate deadline;
     private Double salary;
-    private String status = "pending"; // pending, approved, rejected
+    private String status = "pending"; //default status
     private String rejectionReason;
 
     @ManyToOne

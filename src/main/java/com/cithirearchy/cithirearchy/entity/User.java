@@ -24,7 +24,6 @@ public abstract class User {
     @Column(name = "role_id", nullable = false)
     private String roleId;
     
-    // Constructors
     public User() {}
     
     public User(String username, String password, String email, String roleId) {
@@ -34,7 +33,6 @@ public abstract class User {
         this.roleId = roleId;
     }
     
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
