@@ -1,6 +1,8 @@
-    package com.cithirearchy.cithirearchy.entity;
-    import jakarta.persistence.*;
-    import java.time.LocalDate;
+package com.cithirearchy.cithirearchy.entity;
+import jakarta.persistence.*;
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
     @Entity
     public class Application {
@@ -14,6 +16,7 @@
 
         @ManyToOne
         @JoinColumn(name = "listingID")
+        @JsonIgnore
         private InternshipListing internshipListing;
 
         @ManyToOne

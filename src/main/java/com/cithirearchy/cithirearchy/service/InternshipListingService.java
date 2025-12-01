@@ -4,6 +4,8 @@ import com.cithirearchy.cithirearchy.entity.InternshipListing;
 import com.cithirearchy.cithirearchy.repository.InternshipListingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,4 +76,12 @@ public class InternshipListingService {
     public List<InternshipListing> getListingsForStudent(String studentCourse) {
         return listingRepository.findByCourse(studentCourse);
     }
+
+    public List<InternshipListing> getApprovedListingsForStudentCourse(String studentCourse) {
+        if (studentCourse == null || studentCourse.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return listingRepository.findApprovedListingsByCourse(studentCourse);
+    }
+    
 }

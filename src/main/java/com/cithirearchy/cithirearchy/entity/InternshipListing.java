@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "internship_listing")
 public class InternshipListing {
@@ -31,9 +35,11 @@ public class InternshipListing {
 
     @ManyToOne
     @JoinColumn(name = "companyID")
+    @JsonBackReference
     private Company company;
 
     @OneToMany(mappedBy = "internshipListing", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Application> applications;
 
     // Getters and Setters

@@ -5,7 +5,10 @@ import com.cithirearchy.cithirearchy.service.CoordinatorService;
 import com.cithirearchy.cithirearchy.entity.Coordinator;
 import com.cithirearchy.cithirearchy.entity.InternshipListing;
 import com.cithirearchy.cithirearchy.service.InternshipListingService;
+import com.cithirearchy.cithirearchy.util.DepartmentCourseMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +28,30 @@ public class CoordinatorController {
 
     @Autowired
     private CoordinatorService coordinatorService; 
+
+    @GetMapping("/department/jobs")
+    public ResponseEntity<List<InternshipListing>> getListingsForCoordinatorDepartment(
+            @RequestParam Long coordinatorId) {
+        Optional<Coordinator> coordinator = coordinatorService.getCoordinatorById(coordinatorId);
+        if (coordinator.isPresent()) {
+            String department = coordinator.get().getCoordinatorDepartment();
+            List<InternshipListing> listings = coordinatorService.getListingsForCoordinatorDepartment(department);
+            return ResponseEntity.ok(listings);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    
+    @GetMapping("/department/jobs/pending")
+    public ResponseEntity<List<InternshipListing>> getPendingListingsForDepartment(
+            @RequestParam Long coordinatorId) {
+        Optional<Coordinator> coordinator = coordinatorService.getCoordinatorById(coordinatorId);
+        if (coordinator.isPresent()) {
+            String department = coordinator.get().getCoordinatorDepartment();
+            List<InternshipListing> listings = coordinatorService.getPendingListingsForDepartment(department);
+            return ResponseEntity.ok(listings);
+        }
+        return ResponseEntity.notFound().build();
+    }
     
     @GetMapping("/jobs")
     public List<InternshipListing> getAllJobsForReview() {
@@ -37,42 +64,65 @@ public class CoordinatorController {
     }
     
     @PostMapping("/jobs/{jobId}/approve")
-    public ResponseEntity<InternshipListing> approveJob(@PathVariable Long jobId) {
-        InternshipListing updatedListing = listingService.updateListingStatus(jobId, "approved", null);
-        if (updatedListing != null) {
-            return ResponseEntity.ok(updatedListing);
+    public ResponseEntity<InternshipListing> approveJob(
+            @PathVariable Long jobId,
+            @RequestParam Long coordinatorId) {
+        
+        Optional<Coordinator> coordinator = coordinatorService.getCoordinatorById(coordinatorId);
+        if (!coordinator.isPresent()) {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.notFound().build();
+        
+        InternshipListing listing = listingService.getListingById(jobId);
+        if (listing == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        // Check if coordinator has permission (courses in their department)
+        String department = coordinator.get().getCoordinatorDepartment();
+        boolean hasPermission = listing.getCourses() != null && 
+            listing.getCourses().stream()
+                .anyMatch(course -> DepartmentCourseMapper.isCourseInDepartment(course, department));
+        
+        if (!hasPermission) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(null); // Coordinator cannot approve listings outside their department
+        }
+        
+        InternshipListing updatedListing = listingService.updateListingStatus(jobId, "approved", null);
+        return updatedListing != null ? ResponseEntity.ok(updatedListing) : ResponseEntity.notFound().build();
     }
     
+    // UPDATE: Reject job - check if coordinator has permission
     @PostMapping("/jobs/{jobId}/reject")
-    public ResponseEntity<InternshipListing> rejectJob(@PathVariable Long jobId, @RequestBody Map<String, String> request) {
+    public ResponseEntity<InternshipListing> rejectJob(
+            @PathVariable Long jobId, 
+            @RequestBody Map<String, String> request,
+            @RequestParam Long coordinatorId) {
+        
+        Optional<Coordinator> coordinator = coordinatorService.getCoordinatorById(coordinatorId);
+        if (!coordinator.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        InternshipListing listing = listingService.getListingById(jobId);
+        if (listing == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        // Check if coordinator has permission
+        String department = coordinator.get().getCoordinatorDepartment();
+        boolean hasPermission = listing.getCourses() != null && 
+            listing.getCourses().stream()
+                .anyMatch(course -> DepartmentCourseMapper.isCourseInDepartment(course, department));
+        
+        if (!hasPermission) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(null);
+        }
+        
         String reason = request.get("reason");
         InternshipListing updatedListing = listingService.updateListingStatus(jobId, "rejected", reason);
-        if (updatedListing != null) {
-            return ResponseEntity.ok(updatedListing);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @GetMapping("/profile/{id}")
-    public ResponseEntity<Coordinator> getCoordinatorProfile(@PathVariable Long id) {
-        Optional<Coordinator> coordinator = coordinatorService.getCoordinatorById(id);
-        return coordinator.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/debug/{id}")
-    public ResponseEntity<Map<String, Object>> debugCoordinator(@PathVariable Long id) {
-        Optional<Coordinator> coordinator = coordinatorService.getCoordinatorById(id);
-        if (coordinator.isPresent()) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("id", coordinator.get().getId());
-            response.put("username", coordinator.get().getUsername());
-            response.put("email", coordinator.get().getEmail());
-            response.put("coordinatorName", coordinator.get().getCoordinatorName());
-            response.put("coordinatorDepartment", coordinator.get().getCoordinatorDepartment());
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.notFound().build();
+        return updatedListing != null ? ResponseEntity.ok(updatedListing) : ResponseEntity.notFound().build();
     }
 }

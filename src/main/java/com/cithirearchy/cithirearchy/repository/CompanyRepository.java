@@ -14,10 +14,5 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 
-    List<Company> findByCompanyStatus(String status);
-    
-    // Use coordinator.id (since Coordinator extends User)
-    List<Company> findByCoordinatorId(Long coordinatorId);
-
     Optional<Company> findByCompanyName(String companyName);
 }

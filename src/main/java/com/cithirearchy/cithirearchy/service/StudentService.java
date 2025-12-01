@@ -39,7 +39,6 @@ public class StudentService {
             Student student = optionalStudent.get();
             student.setStudName(studentDetails.getStudName());
             student.setEmail(studentDetails.getEmail());
-            student.setStudProgram(studentDetails.getStudProgram());
             student.setStudYrLevel(studentDetails.getStudYrLevel());
             student.setResumeURL(studentDetails.getResumeURL());
             student.setStudGPA(studentDetails.getStudGPA());
@@ -57,10 +56,6 @@ public class StudentService {
             return studentRepository.save(student);
         }
         return null;
-    }
-
-    public List<Student> getStudentsByProgram(String program) {
-        return studentRepository.findByStudProgram(program);
     }
 
     // CHANGED: Now filters by String course instead of Course entity
