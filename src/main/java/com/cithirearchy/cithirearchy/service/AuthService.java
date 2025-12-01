@@ -81,7 +81,6 @@ public class AuthService {
         
         company.setPassword(passwordEncoder.encode(rawPassword));
         company.setRoleId("25-102"); // Company role
-        company.setCompanyStatus("Pending"); // Default status
         return companyRepository.save(company);
     }
     

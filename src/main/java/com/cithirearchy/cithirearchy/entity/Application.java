@@ -1,7 +1,10 @@
-    package com.cithirearchy.cithirearchy.entity;
-    import jakarta.persistence.*;
-    import java.time.LocalDate;
+package com.cithirearchy.cithirearchy.entity;
+import jakarta.persistence.*;
+import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+//test commit in different checkout.
     @Entity
     public class Application {
         @Id
@@ -14,10 +17,12 @@
 
         @ManyToOne
         @JoinColumn(name = "listingID")
+        @JsonIgnoreProperties({"applications"})
         private InternshipListing internshipListing;
 
         @ManyToOne
         @JoinColumn(name = "studID")
+        @JsonIgnoreProperties({"applications"})
         private Student student;
 
         public Long getApplicationID() { return applicationID; }

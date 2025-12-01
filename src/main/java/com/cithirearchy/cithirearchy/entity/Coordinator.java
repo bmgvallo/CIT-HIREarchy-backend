@@ -10,9 +10,6 @@ public class Coordinator extends User {
     private String coordinatorName;
     private String coordinatorDepartment;
 
-    @OneToMany(mappedBy = "coordinator", cascade = CascadeType.ALL)
-    private List<Company> companies;
-
     public Coordinator() {
         super();
         setRoleId("25-101");
@@ -30,8 +27,5 @@ public class Coordinator extends User {
     public String getCoordinatorDepartment() { return coordinatorDepartment; }
     public void setCoordinatorDepartment(String coordinatorDepartment) { this.coordinatorDepartment = coordinatorDepartment; }
 
-    public List<Company> getCompanies() { return companies; }
-    public void setCompanies(List<Company> companies) { this.companies = companies; }
-    
     public Long getCoordinatorID() { return super.getId(); }
 }

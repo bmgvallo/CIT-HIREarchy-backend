@@ -2,6 +2,8 @@ package com.cithirearchy.cithirearchy.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "company")
 @PrimaryKeyJoinColumn(name = "user_id")
@@ -10,22 +12,17 @@ public class Company extends User {
     private String companyName;
     private String companyDescription;
     private String companyWebsite;
-    private String companyStatus;
     private String contactPerson;
     private String contactPhone;
 
-    @ManyToOne
-    @JoinColumn(name = "coordinator_id")
-    private Coordinator coordinator;
-
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<InternshipListing> internshipListings;
 
 
     public Company() {
         super();
         setRoleId("25-102");
-        this.companyStatus = "Pending";
     }
     
     public Company(String username, String password, String email, String companyName, 
@@ -35,7 +32,6 @@ public class Company extends User {
         this.companyDescription = companyDescription;
         this.contactPerson = contactPerson;
         this.contactPhone = contactPhone;
-        this.companyStatus = "Pending";
     }
 
     
@@ -48,17 +44,11 @@ public class Company extends User {
     public String getCompanyWebsite() { return companyWebsite; }
     public void setCompanyWebsite(String companyWebsite) { this.companyWebsite = companyWebsite; }
 
-    public String getCompanyStatus() { return companyStatus; }
-    public void setCompanyStatus(String companyStatus) { this.companyStatus = companyStatus; }
-
     public String getContactPerson() { return contactPerson; }
     public void setContactPerson(String contactPerson) { this.contactPerson = contactPerson; }
 
     public String getContactPhone() { return contactPhone; }
     public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
-
-    public Coordinator getCoordinator() { return coordinator; }
-    public void setCoordinator(Coordinator coordinator) { this.coordinator = coordinator; }
 
     public List<InternshipListing> getInternshipListings() { return internshipListings; }
     public void setInternshipListings(List<InternshipListing> internshipListings) { this.internshipListings = internshipListings; }

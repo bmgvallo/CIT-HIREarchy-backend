@@ -1,12 +1,15 @@
 package com.cithirearchy.cithirearchy.controller;
 
+import com.cithirearchy.cithirearchy.entity.InternshipListing;
 import com.cithirearchy.cithirearchy.entity.Student;
+import com.cithirearchy.cithirearchy.service.InternshipListingService;
 import com.cithirearchy.cithirearchy.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +22,9 @@ public class StudentController {
     
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private InternshipListingService listingService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerStudent(@RequestBody Student student) {
@@ -51,9 +57,31 @@ public class StudentController {
 
     @GetMapping
     public ResponseEntity<List<Student>> getAllStudents() {
-        try {
+        try { 
             List<Student> students = studentService.getAllStudents();
             return ResponseEntity.ok(students);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/{studentId}/listings")
+    public ResponseEntity<List<InternshipListing>> getApprovedListingsForStudent(@PathVariable Long studentId) {
+        try {
+            // Get student to find their course
+            Optional<Student> student = studentService.getStudentById(studentId);
+            if (student.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            String studentCourse = student.get().getCourse();
+            if (studentCourse == null || studentCourse.isEmpty()) {
+                return ResponseEntity.ok(new ArrayList<>());
+            }
+            
+            // Get APPROVED listings for student's course
+            List<InternshipListing> listings = listingService.getApprovedListingsForStudentCourse(studentCourse);
+            return ResponseEntity.ok(listings);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -98,7 +126,6 @@ public class StudentController {
             response.put("username", student.get().getUsername());
             response.put("email", student.get().getEmail());
             response.put("studName", student.get().getStudName());
-            response.put("studProgram", student.get().getStudProgram());
             response.put("studYrLevel", student.get().getStudYrLevel());
             response.put("studGPA", student.get().getStudGPA());
             response.put("resumeURL", student.get().getResumeURL());

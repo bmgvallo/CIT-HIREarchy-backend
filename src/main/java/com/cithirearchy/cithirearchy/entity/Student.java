@@ -8,7 +8,6 @@ import java.util.List;
 public class Student extends User {
     
     private String studName;
-    private String studProgram;
     private String studYrLevel;
     private String resumeURL; 
     private Double studGPA;
@@ -26,10 +25,9 @@ public class Student extends User {
     }
     
     public Student(String username, String password, String email, String studName, 
-                   String studProgram, String studYrLevel, String course) {
+                String studYrLevel, String course) {
         super(username, password, email, "25-103");
         this.studName = studName;
-        this.studProgram = studProgram;
         this.studYrLevel = studYrLevel;
         this.course = course;
     }
@@ -37,9 +35,6 @@ public class Student extends User {
     // Getters and Setters
     public String getStudName() { return studName; }
     public void setStudName(String studName) { this.studName = studName; }
-
-    public String getStudProgram() { return studProgram; }
-    public void setStudProgram(String studProgram) { this.studProgram = studProgram; }
 
     public String getStudYrLevel() { return studYrLevel; }
     public void setStudYrLevel(String studYrLevel) { this.studYrLevel = studYrLevel; }
