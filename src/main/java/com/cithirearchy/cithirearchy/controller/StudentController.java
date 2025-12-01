@@ -57,7 +57,7 @@ public class StudentController {
 
     @GetMapping
     public ResponseEntity<List<Student>> getAllStudents() {
-        try {
+        try { 
             List<Student> students = studentService.getAllStudents();
             return ResponseEntity.ok(students);
         } catch (Exception e) {

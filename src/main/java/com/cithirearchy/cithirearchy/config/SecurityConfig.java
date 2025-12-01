@@ -1,10 +1,10 @@
-// src/main/java/com/cithirearchy/cithirearchy/config/SecurityConfig.java
 package com.cithirearchy.cithirearchy.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,9 +21,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for API testing
+            // Disable Spring Security's CORS (we're using our own filter)
+            .cors(AbstractHttpConfigurer::disable)
+            
+            // Disable CSRF for API testing
+            .csrf(AbstractHttpConfigurer::disable)
+            
+            // Allow all requests without authentication
             .authorizeHttpRequests(authz -> authz
-                .anyRequest().permitAll() // Allow all requests without authentication for now
+                .requestMatchers("/**").permitAll()
+                .anyRequest().permitAll()
             );
         
         return http.build();

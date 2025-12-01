@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 //test commit in different checkout.
     @Entity
     public class Application {
@@ -16,11 +17,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
         @ManyToOne
         @JoinColumn(name = "listingID")
-        @JsonIgnore
+        @JsonIgnoreProperties({"applications"})
         private InternshipListing internshipListing;
 
         @ManyToOne
         @JoinColumn(name = "studID")
+        @JsonIgnoreProperties({"applications"})
         private Student student;
 
         public Long getApplicationID() { return applicationID; }

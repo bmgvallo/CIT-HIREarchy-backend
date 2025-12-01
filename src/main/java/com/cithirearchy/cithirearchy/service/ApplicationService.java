@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ApplicationService {
-    
+
     @Autowired
     private ApplicationRepository applicationRepository;
 
@@ -25,6 +26,21 @@ public class ApplicationService {
 
     public List<Application> getApplicationsByListing(Long listingId) {
         return applicationRepository.findByInternshipListingListingID(listingId);
+    }
+
+    public boolean deleteApplication(Long applicationId) {
+        Optional<Application> application = applicationRepository.findById(applicationId);
+        if (application.isPresent()) {
+            // Only allow deletion if status is PENDING
+            if ("PENDING".equalsIgnoreCase(application.get().getStatus())) {
+                applicationRepository.deleteById(applicationId);
+                return true;
+            } else {
+                throw new IllegalStateException(
+                        "Cannot delete application with status: " + application.get().getStatus());
+            }
+        }
+        return false;
     }
 
     public Application updateApplicationStatus(Long applicationId, String status, String feedback) {
