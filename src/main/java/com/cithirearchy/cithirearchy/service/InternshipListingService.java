@@ -10,22 +10,22 @@ import java.util.List;
 
 @Service
 public class InternshipListingService {
-    
+
     @Autowired
     private InternshipListingRepository listingRepository;
-    
+
     public InternshipListing getListingById(Long id) {
         return listingRepository.findById(id).orElse(null);
     }
-    
+
     public InternshipListing createListing(InternshipListing listing) {
         return listingRepository.save(listing);
     }
-    
+
     public List<InternshipListing> getAllListings() {
         return listingRepository.findAll();
     }
-    
+
     public List<InternshipListing> getListingsByCompany(Long companyId) {
         return listingRepository.findByCompanyId(companyId);
     }
@@ -46,19 +46,46 @@ public class InternshipListingService {
     public List<InternshipListing> getListingsByModality(String modality) {
         return listingRepository.findByModality(modality);
     }
-    
+
     public InternshipListing updateListingStatus(Long listingId, String status, String rejectionReason) {
         InternshipListing listing = listingRepository.findById(listingId).orElse(null);
         if (listing != null) {
             listing.setStatus(status);
             if (rejectionReason != null) {
                 listing.setRejectionReason(rejectionReason);
+            } else if ("pending".equalsIgnoreCase(status)) {
+                // Clear rejection reason when setting back to pending
+                listing.setRejectionReason(null);
             }
             return listingRepository.save(listing);
         }
         return null;
     }
-    
+
+    // In InternshipListingService.java
+    public InternshipListing updateListingWithReapproval(Long listingId, InternshipListing listing) {
+        InternshipListing existingListing = getListingById(listingId);
+        if (existingListing != null) {
+            listing.setListingID(listingId);
+
+            // If editing an approved listing, set status back to pending
+            if ("approved".equalsIgnoreCase(existingListing.getStatus())) {
+                listing.setStatus("pending");
+                listing.setRejectionReason(null); // Clear any previous rejection reason
+            } else {
+                // Keep the existing status
+                listing.setStatus(existingListing.getStatus());
+            }
+
+            // Preserve applications and company
+            listing.setApplications(existingListing.getApplications());
+            listing.setCompany(existingListing.getCompany());
+
+            return createListing(listing);
+        }
+        return null;
+    }
+
     public boolean deleteListing(Long id) {
         if (listingRepository.existsById(id)) {
             listingRepository.deleteById(id);
@@ -66,12 +93,12 @@ public class InternshipListingService {
         }
         return false;
     }
-    
+
     // IMPROVED: Now uses repository method instead of filtering in service
     public List<InternshipListing> getListingsByStatus(String status) {
         return listingRepository.findByStatus(status);
     }
-    
+
     // NEW: Method to get listings for a specific student based on their course
     public List<InternshipListing> getListingsForStudent(String studentCourse) {
         return listingRepository.findByCourse(studentCourse);
@@ -83,5 +110,5 @@ public class InternshipListingService {
         }
         return listingRepository.findApprovedListingsByCourse(studentCourse);
     }
-    
+
 }

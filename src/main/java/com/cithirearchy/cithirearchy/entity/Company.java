@@ -1,8 +1,10 @@
 package com.cithirearchy.cithirearchy.entity;
+
 import jakarta.persistence.*;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "company")
@@ -16,9 +18,8 @@ public class Company extends User {
     private String contactPhone;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore // Add this to prevent circular serialization
     private List<InternshipListing> internshipListings;
-
 
     public Company() {
         super();
@@ -33,7 +34,6 @@ public class Company extends User {
         this.contactPerson = contactPerson;
         this.contactPhone = contactPhone;
     }
-
     
     public String getCompanyName() { return companyName; }
     public void setCompanyName(String companyName) { this.companyName = companyName; }

@@ -30,16 +30,25 @@ public class CoordinatorController {
     private CoordinatorService coordinatorService; 
 
     @GetMapping("/department/jobs")
-    public ResponseEntity<List<InternshipListing>> getListingsForCoordinatorDepartment(
-            @RequestParam Long coordinatorId) {
-        Optional<Coordinator> coordinator = coordinatorService.getCoordinatorById(coordinatorId);
-        if (coordinator.isPresent()) {
-            String department = coordinator.get().getCoordinatorDepartment();
-            List<InternshipListing> listings = coordinatorService.getListingsForCoordinatorDepartment(department);
-            return ResponseEntity.ok(listings);
+public ResponseEntity<List<InternshipListing>> getListingsForCoordinatorDepartment(
+        @RequestParam Long coordinatorId) {
+    Optional<Coordinator> coordinator = coordinatorService.getCoordinatorById(coordinatorId);
+    if (coordinator.isPresent()) {
+        String department = coordinator.get().getCoordinatorDepartment();
+        List<InternshipListing> listings = coordinatorService.getListingsForCoordinatorDepartment(department);
+        
+        // Fetch company details for each listing
+        for (InternshipListing listing : listings) {
+            if (listing.getCompany() != null && listing.getCompany().getId() != null) {
+                // The company data should already be loaded if you have proper JPA relationships
+                // If not, you might need to fetch it separately
+            }
         }
-        return ResponseEntity.notFound().build();
+        
+        return ResponseEntity.ok(listings);
     }
+    return ResponseEntity.notFound().build();
+}
     
     @GetMapping("/department/jobs/pending")
     public ResponseEntity<List<InternshipListing>> getPendingListingsForDepartment(

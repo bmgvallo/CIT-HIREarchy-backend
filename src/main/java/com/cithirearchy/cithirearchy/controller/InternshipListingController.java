@@ -12,38 +12,75 @@ import java.util.List;
 @RequestMapping("/api/listings")
 @CrossOrigin(origins = "http://localhost:3000")
 public class InternshipListingController {
-    
+
     @Autowired
     private InternshipListingService listingService;
-    
+
     @GetMapping
     public List<InternshipListing> getAllListings() {
         return listingService.getAllListings();
     }
-    
+
     @GetMapping("/company/{companyId}")
     public List<InternshipListing> getListingsByCompany(@PathVariable Long companyId) {
         return listingService.getListingsByCompany(companyId);
     }
-    
+
     @PostMapping
     public InternshipListing createListing(@RequestBody InternshipListing listing) {
         return listingService.createListing(listing);
     }
-    
+
     @PutMapping("/{id}")
-    public ResponseEntity<InternshipListing> updateListing(@PathVariable Long id, @RequestBody InternshipListing listing) {
+    public ResponseEntity<InternshipListing> updateListing(@PathVariable Long id,
+            @RequestBody InternshipListing listing) {
         InternshipListing existing = listingService.getListingById(id);
         if (existing != null) {
             listing.setListingID(id);
+
+            // If the existing listing was approved, set status to pending
+            if ("approved".equalsIgnoreCase(existing.getStatus())) {
+                listing.setStatus("pending");
+            } else {
+                // Keep the existing status if it's not approved
+                listing.setStatus(existing.getStatus());
+            }
+
+            // Preserve rejection reason if any
+            if (existing.getRejectionReason() != null && listing.getRejectionReason() == null) {
+                listing.setRejectionReason(existing.getRejectionReason());
+            }
+
             return ResponseEntity.ok(listingService.createListing(listing));
         }
         return ResponseEntity.notFound().build();
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteListing(@PathVariable Long id) {
         boolean deleted = listingService.deleteListing(id);
         return deleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}/edit-by-company")
+    public ResponseEntity<InternshipListing> updateListingByCompany(@PathVariable Long id,
+            @RequestBody InternshipListing listing) {
+        InternshipListing existing = listingService.getListingById(id);
+        if (existing != null) {
+            listing.setListingID(id);
+
+            // Always set to pending when company edits
+            listing.setStatus("pending");
+
+            // Preserve company and applications
+            listing.setCompany(existing.getCompany());
+            listing.setApplications(existing.getApplications());
+
+            // Clear rejection reason when set back to pending
+            listing.setRejectionReason(null);
+
+            return ResponseEntity.ok(listingService.createListing(listing));
+        }
+        return ResponseEntity.notFound().build();
     }
 }

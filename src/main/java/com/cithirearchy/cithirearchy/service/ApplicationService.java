@@ -17,7 +17,21 @@ public class ApplicationService {
     public Application submitApplication(Application application) {
         application.setApplyDate(LocalDate.now());
         application.setStatus("PENDING");
-        return applicationRepository.save(application);
+        
+        // Debug logging
+        System.out.println("=== SUBMITTING APPLICATION ===");
+        System.out.println("Resume URL: " + application.getResumeURL());
+        System.out.println("Cover Letter (first 50 chars): " + 
+            (application.getCoverLetter() != null ? 
+             application.getCoverLetter().substring(0, Math.min(50, application.getCoverLetter().length())) : "NULL"));
+        
+        Application savedApp = applicationRepository.save(application);
+        
+        System.out.println("Application saved with ID: " + savedApp.getApplicationID());
+        System.out.println("Saved Resume URL: " + savedApp.getResumeURL());
+        System.out.println("========================");
+        
+        return savedApp;
     }
 
     public List<Application> getApplicationsByStudent(Long studentId) {
@@ -25,7 +39,20 @@ public class ApplicationService {
     }
 
     public List<Application> getApplicationsByListing(Long listingId) {
-        return applicationRepository.findByInternshipListingListingID(listingId);
+        List<Application> applications = applicationRepository.findByInternshipListingListingID(listingId);
+        
+        // Debug logging
+        System.out.println("=== FETCHING APPLICATIONS FOR LISTING " + listingId + " ===");
+        for (Application app : applications) {
+            System.out.println("App ID: " + app.getApplicationID());
+            System.out.println("  - Resume URL: " + app.getResumeURL());
+            System.out.println("  - Cover Letter present: " + (app.getCoverLetter() != null));
+            System.out.println("  - Status: " + app.getStatus());
+        }
+        System.out.println("Total applications: " + applications.size());
+        System.out.println("========================");
+        
+        return applications;
     }
 
     public boolean deleteApplication(Long applicationId) {

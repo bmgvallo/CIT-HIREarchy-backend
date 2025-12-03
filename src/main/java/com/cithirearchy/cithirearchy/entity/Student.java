@@ -1,4 +1,5 @@
 package com.cithirearchy.cithirearchy.entity;
+
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -10,8 +11,11 @@ public class Student extends User {
     private String studName;
     private String studYrLevel;
     private String resumeURL; 
-    private Double studGPA;
     
+    // FIXED: Removed precision and scale for Double type
+    @Column(name = "stud_gpa")
+    private Double studGPA;
+
     // CHANGED: Replace Course reference with String course field
     private String course; // Now stores course as String instead of Course entity
 
@@ -25,11 +29,12 @@ public class Student extends User {
     }
     
     public Student(String username, String password, String email, String studName, 
-                String studYrLevel, String course) {
+                String studYrLevel, String course, Double studGPA) {
         super(username, password, email, "25-103");
         this.studName = studName;
         this.studYrLevel = studYrLevel;
         this.course = course;
+        this.studGPA = studGPA;
     }
 
     // Getters and Setters
