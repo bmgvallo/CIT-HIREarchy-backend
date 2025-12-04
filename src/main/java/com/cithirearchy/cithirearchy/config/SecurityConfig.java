@@ -21,13 +21,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // Disable Spring Security's CORS (we're using our own filter)
+            // disable spring security's CORS (using our own filter)
             .cors(AbstractHttpConfigurer::disable)
             
-            // Disable CSRF for API testing
+            // disable CSRF for API testing
             .csrf(AbstractHttpConfigurer::disable)
             
-            // Allow all requests without authentication
+            // allow all requests without authentication
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/**").permitAll()
                 .anyRequest().permitAll()

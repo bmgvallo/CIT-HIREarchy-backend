@@ -34,19 +34,19 @@ public class StudentService {
     }
 
     public Student updateStudentProfile(Long id, Student studentDetails) {
-        Optional<Student> optionalStudent = studentRepository.findById(id);
-        if (optionalStudent.isPresent()) {
-            Student student = optionalStudent.get();
-            student.setStudName(studentDetails.getStudName());
-            student.setEmail(studentDetails.getEmail());
-            student.setStudYrLevel(studentDetails.getStudYrLevel());
-            student.setResumeURL(studentDetails.getResumeURL());
-            student.setStudGPA(studentDetails.getStudGPA());
-            student.setCourse(studentDetails.getCourse()); // CHANGED: Update course as String
-            return studentRepository.save(student);
-        }
-        return null;
+    Optional<Student> optionalStudent = studentRepository.findById(id);
+    if (optionalStudent.isPresent()) {
+        Student student = optionalStudent.get();
+        student.setStudName(studentDetails.getStudName());
+        student.setEmail(studentDetails.getEmail());
+        student.setStudYrLevel(studentDetails.getStudYrLevel());
+        student.setResumeURL(studentDetails.getResumeURL());
+        student.setStudGPA(studentDetails.getStudGPA()); // Add this line
+        student.setCourse(studentDetails.getCourse());
+        return studentRepository.save(student);
     }
+    return null;
+}
     
     public Student updateStudentPassword(Long id, String newPassword) {
         Optional<Student> optionalStudent = studentRepository.findById(id);
@@ -58,7 +58,6 @@ public class StudentService {
         return null;
     }
 
-    // CHANGED: Now filters by String course instead of Course entity
     public List<Student> getStudentsByCourse(String course) {
         return studentRepository.findByCourse(course);
     }

@@ -14,6 +14,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     
-    // CHANGED: Replace course-based method with String course filter
     List<Student> findByCourse(String course);
 }

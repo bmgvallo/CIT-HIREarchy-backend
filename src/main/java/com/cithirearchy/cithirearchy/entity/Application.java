@@ -2,7 +2,6 @@ package com.cithirearchy.cithirearchy.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 //test commit in different checkout.
     @Entity
@@ -14,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
         private LocalDate applyDate;
         private String status;
         private String feedback;
+        private String coverLetter;
+        private String resumeURL;
 
         @ManyToOne
         @JoinColumn(name = "listingID")
@@ -36,6 +37,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
         public String getFeedback() { return feedback; }
         public void setFeedback(String feedback) { this.feedback = feedback; }
+
+        public String getCoverLetter() { return coverLetter; }
+        public void setCoverLetter(String coverLetter) { this.coverLetter = coverLetter; }
+
+        public String getResumeURL() { return resumeURL; }
+        public void setResumeURL(String resumeURL) { this.resumeURL = resumeURL; }
 
         public InternshipListing getInternshipListing() { return internshipListing; }
         public void setInternshipListing(InternshipListing internshipListing) { this.internshipListing = internshipListing; }

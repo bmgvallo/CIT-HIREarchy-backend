@@ -57,12 +57,9 @@ public class CompanyController {
         return updatedCompany != null ? ResponseEntity.ok(updatedCompany) : ResponseEntity.notFound().build();
     }
 
-    
-    // NEW: Get applications for company's listings
     @GetMapping("/{companyId}/applications")
     public ResponseEntity<List<Application>> getApplicationsForCompany(@PathVariable Long companyId) {
         try {
-            // Get company's listings
             Optional<Company> company = companyService.getCompanyById(companyId);
             if (company.isEmpty()) {
                 return ResponseEntity.notFound().build();
@@ -73,7 +70,6 @@ public class CompanyController {
                 return ResponseEntity.ok(new ArrayList<>());
             }
             
-            // Get all applications for company's listings
             List<Application> allApplications = new ArrayList<>();
             for (InternshipListing listing : companyListings) {
                 List<Application> listingApplications = applicationService.getApplicationsByListing(listing.getListingID());
@@ -86,7 +82,6 @@ public class CompanyController {
         }
     }
     
-    // NEW: Update application status (company reviews/decides)
     @PatchMapping("/applications/{applicationId}/review")
     public ResponseEntity<Application> reviewApplication(
             @PathVariable Long applicationId,
@@ -113,7 +108,7 @@ class LoginRequest {
 }
 
 class ApplicationReviewRequest {
-    private String status;  // "REVIEWED", "ACCEPTED", "REJECTED"
+    private String status;
     private String feedback;
     
     public String getStatus() { return status; }

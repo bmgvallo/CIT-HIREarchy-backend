@@ -1,4 +1,3 @@
-// src/main/java/com/cithirearchy/cithirearchy/entity/User.java
 package com.cithirearchy.cithirearchy.entity;
 
 import jakarta.persistence.*;

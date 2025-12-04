@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequestMapping("/api/students")
 @CrossOrigin(origins = "http://localhost:3000")
 public class StudentController {
-    
+
     @Autowired
     private StudentService studentService;
 
@@ -29,12 +29,19 @@ public class StudentController {
     @PostMapping("/register")
     public ResponseEntity<?> registerStudent(@RequestBody Student student) {
         try {
-            // Check if email already exists using new method
+            // check if email already exists using new method
             Optional<Student> existingStudent = studentService.getStudentByEmail(student.getEmail());
             if (existingStudent.isPresent()) {
                 return ResponseEntity.badRequest().body("Email already exists");
             }
-            
+
+            // validate GPA if provided
+            if (student.getStudGPA() != null) {
+                if (student.getStudGPA() < 0 || student.getStudGPA() > 5) {
+                    return ResponseEntity.badRequest().body("GPA must be between 0 and 5");
+                }
+            }
+
             Student savedStudent = studentService.registerStudent(student);
             return ResponseEntity.ok(savedStudent);
         } catch (Exception e) {
@@ -45,7 +52,8 @@ public class StudentController {
     @PostMapping("/login")
     public ResponseEntity<?> loginStudent(@RequestBody LoginRequest loginRequest) {
         try {
-            Optional<Student> student = studentService.loginStudent(loginRequest.getEmail(), loginRequest.getPassword());
+            Optional<Student> student = studentService.loginStudent(loginRequest.getEmail(),
+                    loginRequest.getPassword());
             if (student.isPresent()) {
                 return ResponseEntity.ok(student.get());
             }
@@ -57,7 +65,7 @@ public class StudentController {
 
     @GetMapping
     public ResponseEntity<List<Student>> getAllStudents() {
-        try { 
+        try {
             List<Student> students = studentService.getAllStudents();
             return ResponseEntity.ok(students);
         } catch (Exception e) {
@@ -68,18 +76,18 @@ public class StudentController {
     @GetMapping("/{studentId}/listings")
     public ResponseEntity<List<InternshipListing>> getApprovedListingsForStudent(@PathVariable Long studentId) {
         try {
-            // Get student to find their course
+            // get student to find their course
             Optional<Student> student = studentService.getStudentById(studentId);
             if (student.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            
+
             String studentCourse = student.get().getCourse();
             if (studentCourse == null || studentCourse.isEmpty()) {
                 return ResponseEntity.ok(new ArrayList<>());
             }
-            
-            // Get APPROVED listings for student's course
+
+            // get only approved listings for student's course
             List<InternshipListing> listings = listingService.getApprovedListingsForStudentCourse(studentCourse);
             return ResponseEntity.ok(listings);
         } catch (Exception e) {
@@ -138,9 +146,20 @@ public class StudentController {
 class LoginRequest {
     private String email;
     private String password;
-    
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

@@ -21,7 +21,6 @@ public class SimpleCorsFilter implements Filter {
 
         System.out.println("CORS Filter: Processing " + request.getMethod() + " request to " + request.getRequestURI());
         
-        // Set CORS headers - be explicit
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
         response.setHeader("Access-Control-Max-Age", "3600");
@@ -29,10 +28,9 @@ public class SimpleCorsFilter implements Filter {
         response.addHeader("Access-Control-Expose-Headers", "xsrf-token");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         
-        // Handle preflight OPTIONS request
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
-            return; // Don't continue the filter chain for OPTIONS
+            return;
         }
         
         chain.doFilter(req, res);
@@ -40,11 +38,9 @@ public class SimpleCorsFilter implements Filter {
     
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        // Initialization - can be empty
     }
     
     @Override
     public void destroy() {
-        // Cleanup - can be empty
     }
 }

@@ -17,7 +17,10 @@ public class ApplicationService {
     public Application submitApplication(Application application) {
         application.setApplyDate(LocalDate.now());
         application.setStatus("PENDING");
-        return applicationRepository.save(application);
+        
+        Application savedApp = applicationRepository.save(application);
+        
+        return savedApp;
     }
 
     public List<Application> getApplicationsByStudent(Long studentId) {
@@ -25,13 +28,13 @@ public class ApplicationService {
     }
 
     public List<Application> getApplicationsByListing(Long listingId) {
-        return applicationRepository.findByInternshipListingListingID(listingId);
+        List<Application> applications = applicationRepository.findByInternshipListingListingID(listingId);        
+        return applications;
     }
 
     public boolean deleteApplication(Long applicationId) {
         Optional<Application> application = applicationRepository.findById(applicationId);
         if (application.isPresent()) {
-            // Only allow deletion if status is PENDING
             if ("PENDING".equalsIgnoreCase(application.get().getStatus())) {
                 applicationRepository.deleteById(applicationId);
                 return true;

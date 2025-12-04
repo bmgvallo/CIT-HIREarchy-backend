@@ -1,4 +1,5 @@
 package com.cithirearchy.cithirearchy.entity;
+
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -10,29 +11,29 @@ public class Student extends User {
     private String studName;
     private String studYrLevel;
     private String resumeURL; 
-    private Double studGPA;
     
-    // CHANGED: Replace Course reference with String course field
-    private String course; // Now stores course as String instead of Course entity
+    @Column(name = "stud_gpa")
+    private Double studGPA;
+
+    private String course;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Application> applications;
 
-    // Constructors
     public Student() {
         super();
         setRoleId("25-103");
     }
     
     public Student(String username, String password, String email, String studName, 
-                String studYrLevel, String course) {
+                String studYrLevel, String course, Double studGPA) {
         super(username, password, email, "25-103");
         this.studName = studName;
         this.studYrLevel = studYrLevel;
         this.course = course;
+        this.studGPA = studGPA;
     }
 
-    // Getters and Setters
     public String getStudName() { return studName; }
     public void setStudName(String studName) { this.studName = studName; }
 
@@ -45,7 +46,6 @@ public class Student extends User {
     public Double getStudGPA() { return studGPA; }
     public void setStudGPA(Double studGPA) { this.studGPA = studGPA; }
 
-    // CHANGED: Getter/Setter for course (String instead of Course entity)
     public String getCourse() { return course; }
     public void setCourse(String course) { this.course = course; }
 

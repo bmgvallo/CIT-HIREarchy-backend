@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "internship_listing")
@@ -24,68 +23,140 @@ public class InternshipListing {
     private String duration;
     private LocalDate deadline;
     private Double salary;
-    private String status = "pending"; //default status
+    private String status = "pending"; // default status
     private String rejectionReason;
 
-    // CHANGED: Replace Course reference with String array for courses
     @ElementCollection
     @CollectionTable(name = "listing_courses", joinColumns = @JoinColumn(name = "listing_id"))
     @Column(name = "course")
-    private List<String> courses; // Stores multiple courses as String array
+    private List<String> courses; 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) 
     @JoinColumn(name = "companyID")
-    @JsonBackReference
+    @JsonIgnoreProperties({ "internshipListings", "password" }) 
     private Company company;
 
     @OneToMany(mappedBy = "internshipListing", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Application> applications;
 
-    // Getters and Setters
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-    
-    public String getRejectionReason() { return rejectionReason; }
-    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+    public String getStatus() {
+        return status;
+    }
 
-    public Long getListingID() { return listingID; }
-    public void setListingID(Long listingID) { this.listingID = listingID; }
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
 
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
+    public Long getListingID() {
+        return listingID;
+    }
 
-    public String getModality() { return modality; }
-    public void setModality(String modality) { this.modality = modality; }
+    public void setListingID(Long listingID) {
+        this.listingID = listingID;
+    }
 
-    public String getRequirements() { return requirements; }
-    public void setRequirements(String requirements) { this.requirements = requirements; }
+    public String getTitle() {
+        return title;
+    }
 
-    public LocalDate getPostDate() { return postDate; }
-    public void setPostDate(LocalDate postDate) { this.postDate = postDate; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public String getDuration() { return duration; }
-    public void setDuration(String duration) { this.duration = duration; }
+    public String getDescription() {
+        return description;
+    }
 
-    public LocalDate getDeadline() { return deadline; }
-    public void setDeadline(LocalDate deadline) { this.deadline = deadline; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public Double getSalary() { return salary; }
-    public void setSalary(Double salary) { this.salary = salary; }
+    public String getLocation() {
+        return location;
+    }
 
-    public Company getCompany() { return company; }
-    public void setCompany(Company company) { this.company = company; }
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
-    // CHANGED: Getter/Setter for courses (List<String> instead of Course entity)
-    public List<String> getCourses() { return courses; }
-    public void setCourses(List<String> courses) { this.courses = courses; }
+    public String getModality() {
+        return modality;
+    }
 
-    public List<Application> getApplications() { return applications; }
-    public void setApplications(List<Application> applications) { this.applications = applications; }
+    public void setModality(String modality) {
+        this.modality = modality;
+    }
+
+    public String getRequirements() {
+        return requirements;
+    }
+
+    public void setRequirements(String requirements) {
+        this.requirements = requirements;
+    }
+
+    public LocalDate getPostDate() {
+        return postDate;
+    }
+
+    public void setPostDate(LocalDate postDate) {
+        this.postDate = postDate;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public List<String> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<String> courses) {
+        this.courses = courses;
+    }
+
+    public List<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
+    }
 }

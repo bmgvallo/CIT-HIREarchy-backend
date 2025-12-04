@@ -19,12 +19,11 @@ public class CoordinatorService {
     private CoordinatorRepository coordinatorRepository;
     
     @Autowired
-    private InternshipListingRepository listingRepository;  // ADD THIS
+    private InternshipListingRepository listingRepository;
     
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // ===== EXISTING METHODS =====
     public Coordinator registerCoordinator(Coordinator coordinator) {
         return coordinatorRepository.save(coordinator);
     }
@@ -63,12 +62,7 @@ public class CoordinatorService {
         return null;
     }
     
-    // ===== NEW METHODS FOR DEPARTMENT-BASED LISTINGS =====
-    
-    // NEW: Get listings for coordinator's department
     public List<InternshipListing> getListingsForCoordinatorDepartment(String department) {
-        // Get all courses in this department
-        List<String> departmentCourses = DepartmentCourseMapper.getCoursesForDepartment(department);
         
         // Find listings that have any of these courses
         List<InternshipListing> allListings = listingRepository.findAll();
@@ -80,7 +74,6 @@ public class CoordinatorService {
             .collect(Collectors.toList());
     }
     
-    // NEW: Get pending listings for coordinator's department
     public List<InternshipListing> getPendingListingsForDepartment(String department) {
         List<InternshipListing> departmentListings = getListingsForCoordinatorDepartment(department);
         return departmentListings.stream()

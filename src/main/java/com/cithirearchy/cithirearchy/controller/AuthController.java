@@ -1,4 +1,3 @@
-// src/main/java/com/cithirearchy/cithirearchy/controller/AuthController.java
 package com.cithirearchy.cithirearchy.controller;
 
 import com.cithirearchy.cithirearchy.entity.*;
@@ -77,12 +76,11 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("exists", exists));
     }
     
-    // Login request DTO
+    // login request DTO
     public static class LoginRequest {
         private String username;
         private String password;
         
-        // Getters and setters
         public String getUsername() { return username; }
         public void setUsername(String username) { this.username = username; }
         public String getPassword() { return password; }
