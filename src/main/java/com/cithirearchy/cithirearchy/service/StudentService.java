@@ -58,7 +58,6 @@ public class StudentService {
         return null;
     }
 
-    // CHANGED: Now filters by String course instead of Course entity
     public List<Student> getStudentsByCourse(String course) {
         return studentRepository.findByCourse(course);
     }

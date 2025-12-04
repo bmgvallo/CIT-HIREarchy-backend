@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,11 +36,8 @@ public ResponseEntity<List<InternshipListing>> getListingsForCoordinatorDepartme
         String department = coordinator.get().getCoordinatorDepartment();
         List<InternshipListing> listings = coordinatorService.getListingsForCoordinatorDepartment(department);
         
-        // Fetch company details for each listing
         for (InternshipListing listing : listings) {
             if (listing.getCompany() != null && listing.getCompany().getId() != null) {
-                // The company data should already be loaded if you have proper JPA relationships
-                // If not, you might need to fetch it separately
             }
         }
         
@@ -87,7 +83,6 @@ public ResponseEntity<List<InternshipListing>> getListingsForCoordinatorDepartme
             return ResponseEntity.notFound().build();
         }
         
-        // Check if coordinator has permission (courses in their department)
         String department = coordinator.get().getCoordinatorDepartment();
         boolean hasPermission = listing.getCourses() != null && 
             listing.getCourses().stream()
@@ -95,14 +90,14 @@ public ResponseEntity<List<InternshipListing>> getListingsForCoordinatorDepartme
         
         if (!hasPermission) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(null); // Coordinator cannot approve listings outside their department
+                .body(null); // coordinator cannot approve listings outside their department
         }
         
         InternshipListing updatedListing = listingService.updateListingStatus(jobId, "approved", null);
         return updatedListing != null ? ResponseEntity.ok(updatedListing) : ResponseEntity.notFound().build();
     }
     
-    // UPDATE: Reject job - check if coordinator has permission
+    // reject job - check if coordinator has permission
     @PostMapping("/jobs/{jobId}/reject")
     public ResponseEntity<InternshipListing> rejectJob(
             @PathVariable Long jobId, 
@@ -119,7 +114,7 @@ public ResponseEntity<List<InternshipListing>> getListingsForCoordinatorDepartme
             return ResponseEntity.notFound().build();
         }
         
-        // Check if coordinator has permission
+        // check if coordinator has permission
         String department = coordinator.get().getCoordinatorDepartment();
         boolean hasPermission = listing.getCourses() != null && 
             listing.getCourses().stream()

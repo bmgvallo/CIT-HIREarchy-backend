@@ -38,15 +38,15 @@ public class InternshipListingController {
         if (existing != null) {
             listing.setListingID(id);
 
-            // If the existing listing was approved, set status to pending
+            // if the existing listing was approved, set status to pending
             if ("approved".equalsIgnoreCase(existing.getStatus())) {
                 listing.setStatus("pending");
             } else {
-                // Keep the existing status if it's not approved
+                // keep the existing status if it's not approved
                 listing.setStatus(existing.getStatus());
             }
 
-            // Preserve rejection reason if any
+            // preserve rejection reason if any
             if (existing.getRejectionReason() != null && listing.getRejectionReason() == null) {
                 listing.setRejectionReason(existing.getRejectionReason());
             }
@@ -69,14 +69,14 @@ public class InternshipListingController {
         if (existing != null) {
             listing.setListingID(id);
 
-            // Always set to pending when company edits
+            // always set to pending when company edits
             listing.setStatus("pending");
 
-            // Preserve company and applications
+            // preserve company and applications
             listing.setCompany(existing.getCompany());
             listing.setApplications(existing.getApplications());
 
-            // Clear rejection reason when set back to pending
+            // clear rejection reason when set back to pending
             listing.setRejectionReason(null);
 
             return ResponseEntity.ok(listingService.createListing(listing));

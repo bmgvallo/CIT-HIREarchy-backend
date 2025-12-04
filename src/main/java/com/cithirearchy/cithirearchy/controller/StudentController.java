@@ -29,16 +29,16 @@ public class StudentController {
     @PostMapping("/register")
     public ResponseEntity<?> registerStudent(@RequestBody Student student) {
         try {
-            // Check if email already exists using new method
+            // check if email already exists using new method
             Optional<Student> existingStudent = studentService.getStudentByEmail(student.getEmail());
             if (existingStudent.isPresent()) {
                 return ResponseEntity.badRequest().body("Email already exists");
             }
 
-            // Validate GPA if provided
+            // validate GPA if provided
             if (student.getStudGPA() != null) {
-                if (student.getStudGPA() < 0 || student.getStudGPA() > 4) {
-                    return ResponseEntity.badRequest().body("GPA must be between 0 and 4");
+                if (student.getStudGPA() < 0 || student.getStudGPA() > 5) {
+                    return ResponseEntity.badRequest().body("GPA must be between 0 and 5");
                 }
             }
 
@@ -76,7 +76,7 @@ public class StudentController {
     @GetMapping("/{studentId}/listings")
     public ResponseEntity<List<InternshipListing>> getApprovedListingsForStudent(@PathVariable Long studentId) {
         try {
-            // Get student to find their course
+            // get student to find their course
             Optional<Student> student = studentService.getStudentById(studentId);
             if (student.isEmpty()) {
                 return ResponseEntity.notFound().build();
@@ -87,7 +87,7 @@ public class StudentController {
                 return ResponseEntity.ok(new ArrayList<>());
             }
 
-            // Get APPROVED listings for student's course
+            // get only approved listings for student's course
             List<InternshipListing> listings = listingService.getApprovedListingsForStudentCourse(studentCourse);
             return ResponseEntity.ok(listings);
         } catch (Exception e) {

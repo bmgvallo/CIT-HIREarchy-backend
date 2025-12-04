@@ -1,11 +1,9 @@
-// src/main/java/com/cithirearchy/cithirearchy/dto/StatusUpdateRequest.java
 package com.cithirearchy.cithirearchy.dto;
 
 public class StatusUpdateRequest {
     private String status;
     private String feedback;
     
-    // Constructors
     public StatusUpdateRequest() {}
     
     public StatusUpdateRequest(String status, String feedback) {
@@ -13,7 +11,6 @@ public class StatusUpdateRequest {
         this.feedback = feedback;
     }
     
-    // Getters and Setters
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
     

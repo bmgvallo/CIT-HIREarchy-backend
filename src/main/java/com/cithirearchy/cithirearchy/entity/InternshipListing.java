@@ -4,10 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "internship_listing")
@@ -28,22 +26,20 @@ public class InternshipListing {
     private String status = "pending"; // default status
     private String rejectionReason;
 
-    // CHANGED: Replace Course reference with String array for courses
     @ElementCollection
     @CollectionTable(name = "listing_courses", joinColumns = @JoinColumn(name = "listing_id"))
     @Column(name = "course")
-    private List<String> courses; // Stores multiple courses as String array
+    private List<String> courses; 
 
-    @ManyToOne(fetch = FetchType.EAGER) // Add FetchType.EAGER
+    @ManyToOne(fetch = FetchType.EAGER) 
     @JoinColumn(name = "companyID")
-    @JsonIgnoreProperties({ "internshipListings", "password" }) // Prevent circular reference
+    @JsonIgnoreProperties({ "internshipListings", "password" }) 
     private Company company;
 
     @OneToMany(mappedBy = "internshipListing", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Application> applications;
 
-    // Getters and Setters
     public String getStatus() {
         return status;
     }
@@ -148,7 +144,6 @@ public class InternshipListing {
         this.company = company;
     }
 
-    // CHANGED: Getter/Setter for courses (List<String> instead of Course entity)
     public List<String> getCourses() {
         return courses;
     }

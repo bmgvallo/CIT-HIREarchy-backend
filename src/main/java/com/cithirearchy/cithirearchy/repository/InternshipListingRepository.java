@@ -11,7 +11,6 @@ import java.util.List;
 public interface InternshipListingRepository extends JpaRepository<InternshipListing, Long> {
     List<InternshipListing> findByCompanyId(Long companyId);
     
-    // CHANGED: Custom query to find listings by course
     @Query("SELECT il FROM InternshipListing il JOIN il.courses c WHERE c = :course")
     List<InternshipListing> findByCourse(@Param("course") String course);
 
@@ -22,6 +21,5 @@ public interface InternshipListingRepository extends JpaRepository<InternshipLis
     List<InternshipListing> findByModality(String modality);
     List<InternshipListing> findByTitleContaining(String title);
     
-    // NEW: Find listings by status
     List<InternshipListing> findByStatus(String status);
 }

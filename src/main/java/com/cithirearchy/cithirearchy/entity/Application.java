@@ -2,7 +2,6 @@ package com.cithirearchy.cithirearchy.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 //test commit in different checkout.
     @Entity

@@ -30,7 +30,6 @@ public class InternshipListingService {
         return listingRepository.findByCompanyId(companyId);
     }
 
-    // CHANGED: Now accepts String course instead of Long courseId
     public List<InternshipListing> getListingsByCourse(String course) {
         return listingRepository.findByCourse(course);
     }
@@ -54,7 +53,6 @@ public class InternshipListingService {
             if (rejectionReason != null) {
                 listing.setRejectionReason(rejectionReason);
             } else if ("pending".equalsIgnoreCase(status)) {
-                // Clear rejection reason when setting back to pending
                 listing.setRejectionReason(null);
             }
             return listingRepository.save(listing);
@@ -62,22 +60,18 @@ public class InternshipListingService {
         return null;
     }
 
-    // In InternshipListingService.java
     public InternshipListing updateListingWithReapproval(Long listingId, InternshipListing listing) {
         InternshipListing existingListing = getListingById(listingId);
         if (existingListing != null) {
             listing.setListingID(listingId);
 
-            // If editing an approved listing, set status back to pending
             if ("approved".equalsIgnoreCase(existingListing.getStatus())) {
                 listing.setStatus("pending");
-                listing.setRejectionReason(null); // Clear any previous rejection reason
+                listing.setRejectionReason(null);
             } else {
-                // Keep the existing status
                 listing.setStatus(existingListing.getStatus());
             }
 
-            // Preserve applications and company
             listing.setApplications(existingListing.getApplications());
             listing.setCompany(existingListing.getCompany());
 
@@ -94,12 +88,12 @@ public class InternshipListingService {
         return false;
     }
 
-    // IMPROVED: Now uses repository method instead of filtering in service
+    // uses repository method instead of filtering in service
     public List<InternshipListing> getListingsByStatus(String status) {
         return listingRepository.findByStatus(status);
     }
 
-    // NEW: Method to get listings for a specific student based on their course
+    // get listings for a specific student based on their course
     public List<InternshipListing> getListingsForStudent(String studentCourse) {
         return listingRepository.findByCourse(studentCourse);
     }

@@ -12,17 +12,14 @@ public class Student extends User {
     private String studYrLevel;
     private String resumeURL; 
     
-    // FIXED: Removed precision and scale for Double type
     @Column(name = "stud_gpa")
     private Double studGPA;
 
-    // CHANGED: Replace Course reference with String course field
-    private String course; // Now stores course as String instead of Course entity
+    private String course;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Application> applications;
 
-    // Constructors
     public Student() {
         super();
         setRoleId("25-103");
@@ -37,7 +34,6 @@ public class Student extends User {
         this.studGPA = studGPA;
     }
 
-    // Getters and Setters
     public String getStudName() { return studName; }
     public void setStudName(String studName) { this.studName = studName; }
 
@@ -50,7 +46,6 @@ public class Student extends User {
     public Double getStudGPA() { return studGPA; }
     public void setStudGPA(Double studGPA) { this.studGPA = studGPA; }
 
-    // CHANGED: Getter/Setter for course (String instead of Course entity)
     public String getCourse() { return course; }
     public void setCourse(String course) { this.course = course; }
 

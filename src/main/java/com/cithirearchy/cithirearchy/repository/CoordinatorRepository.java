@@ -7,7 +7,6 @@ import java.util.Optional;
 
 @Repository
 public interface CoordinatorRepository extends JpaRepository<Coordinator, Long> {
-    // Remove findByCoordinatorEmail - use findByEmail instead
     Optional<Coordinator> findByUsername(String username);
     Optional<Coordinator> findByEmail(String email);
     

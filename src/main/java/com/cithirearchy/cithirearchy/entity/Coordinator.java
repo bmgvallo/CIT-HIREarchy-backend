@@ -1,6 +1,5 @@
 package com.cithirearchy.cithirearchy.entity;
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "coordinator")

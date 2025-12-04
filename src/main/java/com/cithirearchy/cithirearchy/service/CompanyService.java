@@ -3,12 +3,10 @@ package com.cithirearchy.cithirearchy.service;
 import com.cithirearchy.cithirearchy.entity.Company;
 import com.cithirearchy.cithirearchy.entity.InternshipListing;
 import com.cithirearchy.cithirearchy.repository.CompanyRepository;
-import com.cithirearchy.cithirearchy.repository.CoordinatorRepository;
 import com.cithirearchy.cithirearchy.repository.InternshipListingRepository;
 import com.cithirearchy.cithirearchy.util.DepartmentCourseMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -19,20 +17,12 @@ public class CompanyService {
     
     @Autowired
     private CompanyRepository companyRepository;
-
-    @Autowired
-    private CoordinatorRepository coordinatorRepository;
     
     @Autowired
     private InternshipListingRepository listingRepository;
     
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     public List<InternshipListing> getListingsForCoordinatorDepartment(String department) {
-        // Get all courses in this department
-        List<String> departmentCourses = DepartmentCourseMapper.getCoursesForDepartment(department);
-        
         // Find listings that have any of these courses
         List<InternshipListing> allListings = listingRepository.findAll();
         

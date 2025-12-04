@@ -26,27 +26,23 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    // Unified login across all user types
     public Map<String, Object> login(String username, String password) {
-        // Try Company first
         Optional<Company> company = companyRepository.findByUsername(username);
         if (company.isPresent() && passwordEncoder.matches(password, company.get().getPassword())) {
             return createLoginResponse(company.get(), "company");
         }
         
-        // Try Coordinator
         Optional<Coordinator> coordinator = coordinatorRepository.findByUsername(username);
         if (coordinator.isPresent() && passwordEncoder.matches(password, coordinator.get().getPassword())) {
             return createLoginResponse(coordinator.get(), "coordinator");
         }
         
-        // Try Student
         Optional<Student> student = studentRepository.findByUsername(username);
         if (student.isPresent() && passwordEncoder.matches(password, student.get().getPassword())) {
             return createLoginResponse(student.get(), "student");
         }
         
-        return null; // Login failed
+        return null;
     }
     
     private Map<String, Object> createLoginResponse(User user, String userType) {
@@ -57,7 +53,6 @@ public class AuthService {
         return response;
     }
     
-    // Registration methods
     public Coordinator registerCoordinator(Coordinator coordinator, String rawPassword) {
         if (coordinatorRepository.existsByUsername(coordinator.getUsername())) {
             throw new RuntimeException("Username already exists");
@@ -67,7 +62,7 @@ public class AuthService {
         }
         
         coordinator.setPassword(passwordEncoder.encode(rawPassword));
-        coordinator.setRoleId("25-101"); // Coordinator role
+        coordinator.setRoleId("25-101");
         return coordinatorRepository.save(coordinator);
     }
     
@@ -80,7 +75,7 @@ public class AuthService {
         }
         
         company.setPassword(passwordEncoder.encode(rawPassword));
-        company.setRoleId("25-102"); // Company role
+        company.setRoleId("25-102");
         return companyRepository.save(company);
     }
     
@@ -93,11 +88,10 @@ public class AuthService {
         }
         
         student.setPassword(passwordEncoder.encode(rawPassword));
-        student.setRoleId("25-103"); // Student role
+        student.setRoleId("25-103");
         return studentRepository.save(student);
     }
     
-    // Utility methods for checking duplicates
     public boolean usernameExists(String username) {
         return companyRepository.existsByUsername(username) ||
                coordinatorRepository.existsByUsername(username) ||
