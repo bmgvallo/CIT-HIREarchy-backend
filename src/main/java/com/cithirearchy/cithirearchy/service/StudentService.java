@@ -40,8 +40,8 @@ public class StudentService {
         student.setStudName(studentDetails.getStudName());
         student.setEmail(studentDetails.getEmail());
         student.setStudYrLevel(studentDetails.getStudYrLevel());
-        student.setResumeURL(studentDetails.getResumeURL());
-        student.setStudGPA(studentDetails.getStudGPA()); // Add this line
+        // student.setResumeURL(studentDetails.getResumeURL());
+        student.setStudGPA(studentDetails.getStudGPA());
         student.setCourse(studentDetails.getCourse());
         return studentRepository.save(student);
     }
