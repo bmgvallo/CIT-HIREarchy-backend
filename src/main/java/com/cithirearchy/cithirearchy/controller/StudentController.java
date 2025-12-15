@@ -37,7 +37,7 @@ public class StudentController {
 
             // validate GPA if provided
             if (student.getStudGPA() != null) {
-                if (student.getStudGPA() < 0 || student.getStudGPA() > 5) {
+                if (student.getStudGPA() < 0 || student.getStudGPA() >= 5) {
                     return ResponseEntity.badRequest().body("GPA must be between 0 and 5");
                 }
             }
@@ -136,7 +136,7 @@ public class StudentController {
             response.put("studName", student.get().getStudName());
             response.put("studYrLevel", student.get().getStudYrLevel());
             response.put("studGPA", student.get().getStudGPA());
-            response.put("resumeURL", student.get().getResumeURL());
+            // response.put("resumeURL", student.get().getResumeURL());
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.notFound().build();

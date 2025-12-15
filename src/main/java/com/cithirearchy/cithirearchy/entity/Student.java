@@ -10,7 +10,7 @@ public class Student extends User {
     
     private String studName;
     private String studYrLevel;
-    private String resumeURL; 
+    // private String resumeURL; 
     
     @Column(name = "stud_gpa")
     private Double studGPA;
@@ -40,8 +40,8 @@ public class Student extends User {
     public String getStudYrLevel() { return studYrLevel; }
     public void setStudYrLevel(String studYrLevel) { this.studYrLevel = studYrLevel; }
 
-    public String getResumeURL() { return resumeURL; }
-    public void setResumeURL(String resumeURL) { this.resumeURL = resumeURL; }
+    // public String getResumeURL() { return resumeURL; }
+    // public void setResumeURL(String resumeURL) { this.resumeURL = resumeURL; }
 
     public Double getStudGPA() { return studGPA; }
     public void setStudGPA(Double studGPA) { this.studGPA = studGPA; }
